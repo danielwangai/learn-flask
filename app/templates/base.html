@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='bootstrap.min.css')}}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='jumbotron-narrow.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="../static/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="/">Home</a></li>
+            <li role="presentation"><a href="/about">About</a></li>
+            <li role="presentation"><a href="http://flask.pocoo.org" target="_blank">More About Flask</a></li>
+          </ul>
+        </nav>
+      </div>
+      {% block body %}
+      {% endblock %}
+      <footer class="footer">
+        <p>© 2016 Your Name Here</p>
+      </footer>
+    </div> <!-- /container -->
+  </body>
+</html>
