@@ -27,3 +27,28 @@ def register():
 
         # redirect to login page
         return redirect(url_for("auth.login"))
+
+
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    """
+    Handle requests to the /login route
+    Log an employee in through the login form
+    """
+    form = LoginForm()
+    if form.validate_on_submit():
+        employee = Employee.query.filter_by(email=form.email.data).first()
+        if employee is not None and employee.verify_password(
+                form.password.data):
+            # log employee in
+            login_user(employee)
+
+            # redirect to the dashboard page after login
+            return redirect(url_for('home.dashboard'))
+
+            # when login details are incorrect
+            else:
+            flash('Invalid email or password.')
+
+    # load login template
+    return render_template('auth/login.html', form=form, title='Login')
