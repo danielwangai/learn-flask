@@ -28,6 +28,16 @@ def create_app(config_name):
 
     from app import models
 
+    # register blueprints
+    from .admin import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint, '/admin')
+
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
+
+    from .home import home as home_blueprint
+    app.register_blueprint(home_blueprint)
+
     @app.route("/")
     def index():
         return "Hello, World!"
