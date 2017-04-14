@@ -52,3 +52,17 @@ def login():
 
     # load login template
     return render_template('auth/login.html', form=form, title='Login')
+
+
+@auth.route("/logout")
+@login_required
+def logout():
+    """
+    Handle requests to the /logout route
+    Log an employee out through the logout link
+    """
+    logout_user()
+    flash('You have successfully been logged out.')
+
+    # redirect to the login page
+    return redirect(url_for('auth.login'))
