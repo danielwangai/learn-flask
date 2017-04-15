@@ -1,59 +1,59 @@
+
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login_manager
 
-
 class Employee(UserMixin, db.Model):
     """
-    Define Employee attributes
+    Create an Employee table
     """
-    # ensures pluralization of table
-    __tablename__ = "employees"
+
+    # Ensures table will be named in plural and not in singular
+    # as is the name of the model
+    __tablename__ = 'employees'
+
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(25), index=True)
-    last_name = db.Column(db.String(25), index=True)
-    username = db.Column(db.String(30), index=True, unique=True)
-    email = db.Column(db.String(80), index=True, unique=True)
+    email = db.Column(db.String(60), index=True, unique=True)
+    username = db.Column(db.String(60), index=True, unique=True)
+    first_name = db.Column(db.String(60), index=True)
+    last_name = db.Column(db.String(60), index=True)
     password_hash = db.Column(db.String(128))
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     is_admin = db.Column(db.Boolean, default=False)
 
-
     @property
     def password(self):
         """
-        Prevent password from being accessed
+        Prevent pasword from being accessed
         """
-        raise AttributeError("Password is not a readable attribute.")
-
+        raise AttributeError('password is not a readable attribute.')
 
     @password.setter
-    def password(self):
+    def password(self, password):
         """
-        To hash passwords
+        Set password to a hashed password
         """
         self.password_hash = generate_password_hash(password)
 
-
-    def verify_password(self):
+    def verify_password(self, password):
         """
-        Check if passwords match
+        Check if hashed password matches actual password
         """
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return "<Employee> - {}".format(self.username)
+        return '<Employee: {}>'.format(self.username)
 
-    @login_manager.user_loader
-    def load_user(user_id):
-        return Employee.query.get(int(user_id))
-
+# Set up user_loader
+@login_manager.user_loader
+def load_user(user_id):
+    return Employee.query.get(int(user_id))
 
 class Department(db.Model):
     """
-    Define Department attributes
+    Create a Department table
     """
 
     __tablename__ = 'departments'
@@ -67,10 +67,9 @@ class Department(db.Model):
     def __repr__(self):
         return '<Department: {}>'.format(self.name)
 
-
 class Role(db.Model):
     """
-    Define Role attributes
+    Create a Role table
     """
 
     __tablename__ = 'roles'
