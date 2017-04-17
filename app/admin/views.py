@@ -148,3 +148,32 @@ def add_role():
 
     return render_template("admin/roles/role.html", add_role=add_role,
                            form=form, title="Add new role")
+
+
+# edit role
+@admin.route("/roles/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_role(id):
+    """
+    To edit existing role.
+    """
+    check_admin()
+
+    add_role = False
+
+    role = Role.query.get_or_404(id)
+
+    form = RoleForm(obj=role)
+
+    if form.validate_on_submit():
+        role.name = form.name.data
+        role.description = form.description.data
+        db.session.commit()
+
+        flash("Role edited successfully!")
+
+        return redirect(url_for("admin.list_roles"))
+    form.name.data = role.name
+    form.description.data = role.description
+    return render_template("admin/roles/role.html", add_role=add_role,
+                           form=form, title="Edit role")
