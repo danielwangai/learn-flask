@@ -31,3 +31,33 @@ def list_departments():
 
     return render_template('admin/departments/departments.html',
                            departments=departments, title='Departments')
+
+
+@admin.route('/departments/add', methods=['GET', 'POST'])
+@login_required
+def add_department():
+    """
+    To add a department
+    """
+    check_admin()
+
+    add_department = True
+
+    form = DepartmentForm
+    if form.validate_on_submit():
+        department = Department(name=form.name.data,
+                                description=form.description.data)
+
+        try:
+            # add department to database
+            db.session.add(department)
+            db.session.commit()
+            flash('You have successfully added a new department.')
+        except:
+            # in case department name already exists
+            flash('Department name already exists')
+        return redirect(url_for('admin.list_departments'))
+
+    return render_template("admin/departments/department.html", action='Add',
+                           add_department=add_department, form=form,
+                           title="Add Department")
