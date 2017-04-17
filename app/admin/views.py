@@ -14,3 +14,20 @@ def check_admin():
     if not current_user.is_admin:
         # forbidden error
         abort(403)
+
+
+# department views
+
+@admin.route('/departments', methods=['GET', 'POST'])
+@login_required
+def list_departments():
+    """
+    list all departments
+    """
+    check_admin()
+
+    # get all department objects
+    departments = Department.query.all()
+
+    return render_template('admin/departments/departments.html',
+                           departments=departments, title='Departments')
