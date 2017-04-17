@@ -88,3 +88,22 @@ def edit_department(id):
     return render_template("admin/departments/department", action="Edit",
                            add_department=add_department, form=form,
                            department=department, title="Edit Department")
+
+
+# delete a department
+@admin.route("/admin/departments/delete/<int:id>", methods=["GET", "POST"])
+@login_required
+def delete_department(id):
+    """
+    Delete a department from the database
+    """
+    check_admin()
+
+    department = Department.query.get_or_404(id)
+    db.session.delete(department)
+    db.session.commit()
+    flash("Department successfully deleted.")
+    # redirect to list of department
+    return redirect(url_for("admin.list_departments"))
+
+    return render_template(title="Delete Department")
