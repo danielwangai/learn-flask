@@ -2,9 +2,9 @@ from flask import abort, flash, render_template, redirect, url_for
 from flask_login import login_required, current_user
 
 from . import admin
-from .forms import DepartmentForm
+from .forms import DepartmentForm, RoleForm
 from .. import db
-from ..models import Department
+from ..models import Department, Role
 
 
 def check_admin():
@@ -109,3 +109,15 @@ def delete_department(id):
     return redirect(url_for("admin.list_departments"))
 
     return render_template(title="Delete Department")
+
+
+# list roles
+@admin.route("/roles", methods=["GET", "POST"])
+@login_required
+def list_roles():
+    """To list all roles."""
+    @check_admin()
+    # get all role objects
+    roles = Role.objects.all()
+    return render_template("admin/roles/roles.html", roles=roles,
+                           title="Roles")

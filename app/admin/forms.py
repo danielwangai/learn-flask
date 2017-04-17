@@ -14,6 +14,7 @@ class DepartmentForm(FlaskForm):
 
 class RoleForm(FlaskForm):
     """A form for admin to add and modify roles."""
+
     name = StringField("Name", validators=[DataRequired()])
     description = StringField("Description", validators=[DataRequired()])
     submit = SubmitField("Submit")
