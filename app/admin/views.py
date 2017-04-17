@@ -121,3 +121,30 @@ def list_roles():
     roles = Role.objects.all()
     return render_template("admin/roles/roles.html", roles=roles,
                            title="Roles")
+
+
+# add role
+@admin.route("/roles/add", methods=["GET", "POST"])
+@login_required
+def add_role():
+    """To add a role."""
+    check_admin()
+
+    add_role = True
+
+    form = RoleForm()
+    if form.validate_on_submit():
+        role = Role(name=form.name.data, description=form.description.data)
+
+        # save data to db
+        try:
+            db.session.add(role)
+            db.session.commit()
+            flash("Role successfully added!")
+        except:
+            flash("Role already exists!")
+
+        return redirect(url_for("admin.list_roles"))
+
+    return render_template("admin/roles/role.html", add_role=add_role,
+                           form=form, title="Add new role")
